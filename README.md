@@ -1,7 +1,7 @@
 # ngx-giscus
 
-[![CI](https://github.com/bolorundurowb/ngx-giscus/actions/workflows/build.yml/badge.svg)](https://github.com/bolorundurowb/ngx-giscus/actions/workflows/build.yml)
-[![codecov](https://codecov.io/gh/bolorundurowb/ngx-giscus/branch/master/graph/badge.svg)](https://codecov.io/gh/bolorundurowb/ngx-giscus)
+[![Build, Test & Coverage](https://github.com/bolorundurowb/ngx-giscus/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/bolorundurowb/ngx-giscus/actions/workflows/build-and-test.yml)
+[![codecov](https://codecov.io/gh/bolorundurowb/ngx-giscus/graph/badge.svg?token=rZQFRmNarn)](https://codecov.io/gh/bolorundurowb/ngx-giscus)
 [![npm](https://img.shields.io/npm/v/ngx-giscus.svg)](https://www.npmjs.com/package/ngx-giscus)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
@@ -9,7 +9,6 @@
 
 **ngx-giscus** lets you embed comment sections in your Angular applications using GitHub Discussions as the backend. It is a standalone, OnPush component that works with Angular 18+ and supports dynamic theme switching, OS-level theme syncing, and server-side rendering safety.
 
----
 
 ## Prerequisites
 
@@ -27,15 +26,14 @@ Visit [giscus.app](https://giscus.app/) and click **Install**. Choose the reposi
 
 On the Giscus website, select your repository. You will need two identifiers for the Angular component:
 
-| Property       | Description                                                       |
-|----------------|-------------------------------------------------------------------|
-| `repoId`       | The repository ID (shown on giscus.app after selecting the repo) |
-| `category`     | The discussion category name                                      |
-| `categoryId`   | The category ID (shown on giscus.app after selecting the category)|
+| Property     | Description                                                        |
+|--------------|--------------------------------------------------------------------|
+| `repoId`     | The repository ID (shown on giscus.app after selecting the repo)   |
+| `category`   | The discussion category name                                       |
+| `categoryId` | The category ID (shown on giscus.app after selecting the category) |
 
 You only need to set these once. Giscus will create a discussion per page (based on your `mapping` choice) the first time someone comments.
 
----
 
 ## Installation
 
@@ -52,7 +50,6 @@ npm install ngx-giscus
 }
 ```
 
----
 
 ## Quick Start
 
@@ -86,7 +83,6 @@ import { GiscusComponent } from 'ngx-giscus';
 export class BlogPostComponent {}
 ```
 
----
 
 ## API Reference
 
@@ -96,23 +92,22 @@ A standalone Angular component. Add `<ngx-giscus>` to any template to embed Gisc
 
 #### Inputs
 
-| Input               | Type                                  | Default     | Description                                                                 |
-|---------------------|---------------------------------------|-------------|-----------------------------------------------------------------------------|
-| `repo`              | `string`                              | —           | GitHub repository in `owner/name` format (e.g., `giscus/giscus`).          |
-| `repoId`            | `string`                              | —           | Repository ID from giscus.app.                                              |
-| `category`          | `string`                              | —           | Discussion category name.                                                   |
-| `categoryId`        | `string`                              | —           | Discussion category ID from giscus.app.                                     |
-| `mapping`           | `GiscusMapping`                       | —           | Mapping between page and discussion: `url`, `title`, `og:title`, `specific`, `number`, `pathname`. |
-| `term`              | `string`                              | —           | Search term when `mapping="specific"`.                                      |
-| `strict`            | `boolean`                             | `undefined` | Use strict title matching.                                                  |
-| `reactionsEnabled`  | `boolean`                             | `undefined` | Enable reactions on the main post.                                          |
-| `emitMetadata`      | `boolean`                             | `undefined` | Emit discussion metadata.                                                   |
-| `inputPosition`     | `'top'` \| `'bottom'`                 | `undefined` | Placement of the comment input box.                                         |
-| `theme`             | `GiscusTheme`                         | `undefined` | Theme for the comment widget (see below).                                   |
-| `lang`              | `string`                              | `undefined` | Language code (e.g., `en`, `fr`, `de`).                                     |
-| `loading`           | `'lazy'` \| `'eager'`                 | `undefined` | Loading strategy for the Giscus iframe.                                     |
+| Input              | Type                  | Default     | Description                                                                                        |
+|--------------------|-----------------------|-------------|----------------------------------------------------------------------------------------------------|
+| `repo`             | `string`              | —           | GitHub repository in `owner/name` format (e.g., `giscus/giscus`).                                  |
+| `repoId`           | `string`              | —           | Repository ID from giscus.app.                                                                     |
+| `category`         | `string`              | —           | Discussion category name.                                                                          |
+| `categoryId`       | `string`              | —           | Discussion category ID from giscus.app.                                                            |
+| `mapping`          | `GiscusMapping`       | —           | Mapping between page and discussion: `url`, `title`, `og:title`, `specific`, `number`, `pathname`. |
+| `term`             | `string`              | —           | Search term when `mapping="specific"`.                                                             |
+| `strict`           | `boolean`             | `undefined` | Use strict title matching.                                                                         |
+| `reactionsEnabled` | `boolean`             | `undefined` | Enable reactions on the main post.                                                                 |
+| `emitMetadata`     | `boolean`             | `undefined` | Emit discussion metadata.                                                                          |
+| `inputPosition`    | `'top'` \| `'bottom'` | `undefined` | Placement of the comment input box.                                                                |
+| `theme`            | `GiscusTheme`         | `undefined` | Theme for the comment widget (see below).                                                          |
+| `lang`             | `string`              | `undefined` | Language code (e.g., `en`, `fr`, `de`).                                                            |
+| `loading`          | `'lazy'` \| `'eager'` | `undefined` | Loading strategy for the Giscus iframe.                                                            |
 
----
 
 ### `GiscusTheme` Type
 
@@ -137,7 +132,6 @@ type GiscusTheme =
   | string;
 ```
 
----
 
 ## Theming
 
@@ -193,13 +187,13 @@ export class AppComponent implements OnInit {
 
 ### `GiscusThemeService` API
 
-| Method               | Description                                                                      |
-|----------------------|----------------------------------------------------------------------------------|
-| `setTheme(theme)`    | Manually sets the theme. Overrides OS sync until the next sync change.          |
-| `syncWithOs()`       | Starts listening to `(prefers-color-scheme: dark)` and updates the theme automatically. |
-| `stopSyncWithOs()`   | Stops listening to OS preference changes.                                        |
-| `theme$`             | `Observable<GiscusTheme>` — Emits the current theme.                             |
-| `theme`              | `GiscusTheme` — Current theme value (synchronous getter).                        |
+| Method             | Description                                                                             |
+|--------------------|-----------------------------------------------------------------------------------------|
+| `setTheme(theme)`  | Manually sets the theme. Overrides OS sync until the next sync change.                  |
+| `syncWithOs()`     | Starts listening to `(prefers-color-scheme: dark)` and updates the theme automatically. |
+| `stopSyncWithOs()` | Stops listening to OS preference changes.                                               |
+| `theme$`           | `Observable<GiscusTheme>` — Emits the current theme.                                    |
+| `theme`            | `GiscusTheme` — Current theme value (synchronous getter).                               |
 
 ---
 
@@ -246,7 +240,6 @@ Open `http://localhost:4200` in your browser.
 
 > **Note:** The demo app points to this repository's GitHub Discussions. Update the `repoId` and `categoryId` in `projects/demo/src/app/app.component.html` to match your own repository to see live comments.
 
----
 
 ## License
 
