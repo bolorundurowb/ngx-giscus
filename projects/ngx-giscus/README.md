@@ -1,63 +1,246 @@
-# NgxGiscus
+# ngx-giscus
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+[![Build, Test & Coverage](https://github.com/bolorundurowb/ngx-giscus/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/bolorundurowb/ngx-giscus/actions/workflows/build-and-test.yml)
+[![codecov](https://codecov.io/gh/bolorundurowb/ngx-giscus/graph/badge.svg?token=rZQFRmNarn)](https://codecov.io/gh/bolorundurowb/ngx-giscus)
+[![npm](https://img.shields.io/npm/v/ngx-giscus.svg)](https://www.npmjs.com/package/ngx-giscus)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
-## Code scaffolding
+> Native Angular component for [Giscus](https://giscus.app/) — a comments system powered by GitHub Discussions.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+**ngx-giscus** lets you embed comment sections in your Angular applications using GitHub Discussions as the backend. It is a standalone, OnPush component that works with Angular 18+ and supports dynamic theme switching, OS-level theme syncing, and server-side rendering safety.
+
+
+## Prerequisites
+
+Before using this library, you must enable GitHub Discussions and install the Giscus app for your repository.
+
+### 1. Enable GitHub Discussions
+
+Go to your repository on GitHub, navigate to **Settings > General > Features**, and check **Discussions**.
+
+### 2. Install the Giscus App
+
+Visit [giscus.app](https://giscus.app/) and click **Install**. Choose the repository (or all repositories) where you want comments enabled.
+
+### 3. Choose a Discussion Category
+
+On the Giscus website, select your repository. You will need two identifiers for the Angular component:
+
+| Property     | Description                                                        |
+|--------------|--------------------------------------------------------------------|
+| `repoId`     | The repository ID (shown on giscus.app after selecting the repo)   |
+| `category`   | The discussion category name                                       |
+| `categoryId` | The category ID (shown on giscus.app after selecting the category) |
+
+You only need to set these once. Giscus will create a discussion per page (based on your `mapping` choice) the first time someone comments.
+
+
+## Installation
 
 ```bash
-ng generate component component-name
+npm install ngx-giscus
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+**Peer dependencies:** This library requires `@angular/core` and `@angular/common` version 18.x through 22.x.
+
+```json
+{
+  "@angular/core": ">=18.0.0 <23.0.0",
+  "@angular/common": ">=18.0.0 <23.0.0"
+}
+```
+
+
+## Quick Start
+
+Import `GiscusComponent` in your standalone component or module and add it to your template.
+
+```typescript
+import { Component } from '@angular/core';
+import { GiscusComponent } from 'ngx-giscus';
+
+@Component({
+  selector: 'app-blog-post',
+  template: `
+    <article>
+      <h1>My Blog Post</h1>
+      <p>Lorem ipsum dolor sit amet...</p>
+    </article>
+
+    <ngx-giscus
+      repo="your-username/your-repo"
+      repoId="R_kgDO..."
+      category="Announcements"
+      categoryId="DIC_kw..."
+      mapping="pathname"
+      theme="light"
+      lang="en"
+    ></ngx-giscus>
+  `,
+  imports: [GiscusComponent],
+  standalone: true,
+})
+export class BlogPostComponent {}
+```
+
+
+## API Reference
+
+### `GiscusComponent`
+
+A standalone Angular component. Add `<ngx-giscus>` to any template to embed Giscus.
+
+#### Inputs
+
+| Input              | Type                  | Default     | Description                                                                                        |
+|--------------------|-----------------------|-------------|----------------------------------------------------------------------------------------------------|
+| `repo`             | `string`              | —           | GitHub repository in `owner/name` format (e.g., `giscus/giscus`).                                  |
+| `repoId`           | `string`              | —           | Repository ID from giscus.app.                                                                     |
+| `category`         | `string`              | —           | Discussion category name.                                                                          |
+| `categoryId`       | `string`              | —           | Discussion category ID from giscus.app.                                                            |
+| `mapping`          | `GiscusMapping`       | —           | Mapping between page and discussion: `url`, `title`, `og:title`, `specific`, `number`, `pathname`. |
+| `term`             | `string`              | —           | Search term when `mapping="specific"`.                                                             |
+| `strict`           | `boolean`             | `undefined` | Use strict title matching.                                                                         |
+| `reactionsEnabled` | `boolean`             | `undefined` | Enable reactions on the main post.                                                                 |
+| `emitMetadata`     | `boolean`             | `undefined` | Emit discussion metadata.                                                                          |
+| `inputPosition`    | `'top'` \| `'bottom'` | `undefined` | Placement of the comment input box.                                                                |
+| `theme`            | `GiscusTheme`         | `undefined` | Theme for the comment widget (see below).                                                          |
+| `lang`             | `string`              | `undefined` | Language code (e.g., `en`, `fr`, `de`).                                                            |
+| `loading`          | `'lazy'` \| `'eager'` | `undefined` | Loading strategy for the Giscus iframe.                                                            |
+
+
+### `GiscusTheme` Type
+
+```typescript
+type GiscusTheme =
+  | 'light'
+  | 'light_high_contrast'
+  | 'light_protanopia'
+  | 'light_tritanopia'
+  | 'dark'
+  | 'dark_high_contrast'
+  | 'dark_protanopia'
+  | 'dark_tritanopia'
+  | 'dark_dimmed'
+  | 'preferred_color_scheme'
+  | 'transparent_dark'
+  | 'noborder_light'
+  | 'noborder_dark'
+  | 'noborder_gray'
+  | 'cobalt'
+  | 'purple_dark'
+  | string;
+```
+
+
+## Theming
+
+### Manual Theme Control
+
+Bind the `theme` input directly to switch themes programmatically:
+
+```typescript
+import { Component } from '@angular/core';
+import { GiscusComponent, GiscusTheme } from 'ngx-giscus';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <button (click)="toggleTheme()">Toggle Theme</button>
+    <ngx-giscus [theme]="currentTheme" repo="..." repoId="..." category="..." categoryId="..." />
+  `,
+  imports: [GiscusComponent],
+  standalone: true,
+})
+export class AppComponent {
+  currentTheme: GiscusTheme = 'light';
+
+  toggleTheme(): void {
+    this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+  }
+}
+```
+
+### Operating System Theme Sync
+
+Use `GiscusThemeService` to automatically sync the Giscus theme with the user's OS-level dark/light preference:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { GiscusComponent, GiscusThemeService } from 'ngx-giscus';
+
+@Component({
+  selector: 'app-root',
+  template: `<ngx-giscus [theme]="themeService.theme$ | async" repo="..." repoId="..." category="..." categoryId="..." />`,
+  imports: [GiscusComponent, AsyncPipe],
+  standalone: true,
+})
+export class AppComponent implements OnInit {
+  constructor(public themeService: GiscusThemeService) {}
+
+  ngOnInit(): void {
+    this.themeService.syncWithOs();
+  }
+}
+```
+
+### `GiscusThemeService` API
+
+| Method             | Description                                                                             |
+|--------------------|-----------------------------------------------------------------------------------------|
+| `setTheme(theme)`  | Manually sets the theme. Overrides OS sync until the next sync change.                  |
+| `syncWithOs()`     | Starts listening to `(prefers-color-scheme: dark)` and updates the theme automatically. |
+| `stopSyncWithOs()` | Stops listening to OS preference changes.                                               |
+| `theme$`           | `Observable<GiscusTheme>` — Emits the current theme.                                    |
+| `theme`            | `GiscusTheme` — Current theme value (synchronous getter).                               |
+
+---
+
+## Server-Side Rendering (SSR)
+
+This component is browser-only. When running on the server (Angular Universal / SSR), the component renders an empty `<div>` and skips all DOM operations such as script injection and `postMessage`. No server-side errors will occur.
+
+If you are using Angular hydration, the component will activate on the client once the giscus script loads, without interfering with the hydration process.
+
+---
+
+## Development
+
+### Setup
 
 ```bash
-ng generate --help
+git clone https://github.com/bolorundurowb/ngx-giscus.git
+cd ngx-giscus
+npm install
 ```
 
-## Building
-
-To build the library, run:
+### Build the Library
 
 ```bash
 ng build ngx-giscus
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
-
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/ngx-giscus
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Run Tests
 
 ```bash
-ng test
+ng test ngx-giscus --no-watch --browsers=ChromeHeadless
 ```
 
-## Running end-to-end tests
+### Serve the Demo App
 
-For end-to-end (e2e) testing, run:
+First build the library, then serve the demo:
 
 ```bash
-ng e2e
+ng build ngx-giscus
+ng serve demo
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Open `http://localhost:4200` in your browser.
 
-## Additional Resources
+> **Note:** The demo app points to this repository's GitHub Discussions. Update the `repoId` and `categoryId` in `projects/demo/src/app/app.component.html` to match your own repository to see live comments.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## License
+
+[Apache-2.0](LICENSE)

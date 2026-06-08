@@ -58,6 +58,12 @@ jobs:
             echo "npm_tag=latest" >> $GITHUB_OUTPUT
           fi
 
+      - name: Publish to npm
+        if: steps.check_tag.outputs.exists == 'false'
+        run: npm publish ./dist/ngx-giscus --access public --tag ${{ steps.prerelease.outputs.npm_tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Create tag
         if: steps.check_tag.outputs.exists == 'false'
         run: |
@@ -73,9 +79,3 @@ jobs:
           tag_name: v${{ steps.version.outputs.version }}
           prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
           generate_release_notes: true
-
-      - name: Publish to npm
-        if: steps.check_tag.outputs.exists == 'false'
-        run: npm publish ./dist/ngx-giscus --access public --tag ${{ steps.prerelease.outputs.npm_tag }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
