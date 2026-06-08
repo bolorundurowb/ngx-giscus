@@ -12,6 +12,10 @@
     "github-discussions",
     "standalone"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bolorundurowb/ngx-giscus.git"
+  },
   "license": "Apache-2.0",
   "dependencies": {
     "tslib": "^2.3.0"
