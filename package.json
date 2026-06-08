@@ -1,12 +1,15 @@
 {
-  "name": ".",
+  "name": "ngx-giscus-workspace",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "start": "ng serve demo",
+    "build:lib": "ng build ngx-giscus",
+    "build:demo": "ng build demo",
+    "build": "npm run build:lib && npm run build:demo",
+    "test:lib": "ng test ngx-giscus --no-watch --browsers=ChromeHeadless",
+    "test:coverage": "ng test ngx-giscus --no-watch --browsers=ChromeHeadless --code-coverage",
+    "test": "npm run test:lib"
   },
   "private": true,
   "dependencies": {

@@ -21,9 +21,24 @@ import type {
 const GISCUS_SCRIPT_URL = 'https://giscus.app/client.js';
 const GISCUS_IFRAME_SELECTOR = 'iframe.giscus-frame';
 
+interface GiscusConfig {
+  theme?: GiscusTheme;
+  repo?: string;
+  repoId?: string;
+  term?: string;
+  mapping?: GiscusMapping;
+  category?: string;
+  categoryId?: string;
+  strict?: boolean;
+  reactionsEnabled?: boolean;
+  emitMetadata?: boolean;
+  inputPosition?: GiscusInputPosition;
+  lang?: string;
+}
+
 interface GiscusMessage {
   giscus: {
-    setConfig: Record<string, unknown>;
+    setConfig: GiscusConfig;
   };
 }
 
@@ -60,26 +75,24 @@ export class GiscusComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.isBrowser) {
+    if (this.isBrowser && this.repo && this.repoId) {
       this.loadGiscus();
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.isBrowser) {
+    if (!this.isBrowser || !this.repo || !this.repoId) {
       return;
     }
 
     const firstChange = Object.values(changes).some((c) => c.firstChange);
 
-    if (firstChange && this.repo && this.repoId) {
+    if (firstChange) {
       this.loadGiscus();
       return;
     }
 
-    if (!firstChange) {
-      this.sendMessage();
-    }
+    this.sendMessage();
   }
 
   ngOnDestroy(): void {
@@ -93,7 +106,6 @@ export class GiscusComponent implements OnInit, OnChanges, OnDestroy {
     script.src = GISCUS_SCRIPT_URL;
     script.crossOrigin = 'anonymous';
     script.async = true;
-    script.defer = true;
 
     this.setDataAttributes(script);
 
@@ -127,12 +139,12 @@ export class GiscusComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private sendMessage(): void {
-    const iframe = document.querySelector<HTMLIFrameElement>(GISCUS_IFRAME_SELECTOR);
+    const iframe = this.elementRef.nativeElement.querySelector<HTMLIFrameElement>(GISCUS_IFRAME_SELECTOR);
     if (!iframe?.contentWindow) {
       return;
     }
 
-    const config: Record<string, unknown> = {};
+    const config: GiscusConfig = {};
 
     if (this.theme) {
       config.theme = this.theme;
