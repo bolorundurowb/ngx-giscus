@@ -1,4 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
+import { vi, type Mock } from 'vitest';
 import { GiscusThemeService } from './giscus.service';
 
 describe('GiscusThemeService', () => {
@@ -17,19 +19,15 @@ describe('GiscusThemeService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should have default theme of light', (done) => {
-    service.theme$.subscribe((theme) => {
-      expect(theme).toBe('light');
-      done();
-    });
+  it('should have default theme of light', async () => {
+    const theme = await firstValueFrom(service.theme$);
+    expect(theme).toBe('light');
   });
 
-  it('should update theme via setTheme', (done) => {
+  it('should update theme via setTheme', async () => {
     service.setTheme('dark');
-    service.theme$.subscribe((theme) => {
-      expect(theme).toBe('dark');
-      done();
-    });
+    const theme = await firstValueFrom(service.theme$);
+    expect(theme).toBe('dark');
   });
 
   it('should return the current theme synchronously', () => {
@@ -44,17 +42,17 @@ describe('GiscusThemeService', () => {
   });
 
   describe('OS theme sync', () => {
-    let matchMediaSpy: jasmine.Spy;
-    let addEventListenerSpy: jasmine.Spy;
-    let removeEventListenerSpy: jasmine.Spy;
+    let matchMediaSpy: ReturnType<typeof vi.spyOn>;
+    let addEventListenerSpy: Mock;
+    let removeEventListenerSpy: Mock;
     let mockMediaQueryList: { matches: boolean };
 
     beforeEach(() => {
       mockMediaQueryList = { matches: false };
-      addEventListenerSpy = jasmine.createSpy('addEventListener');
-      removeEventListenerSpy = jasmine.createSpy('removeEventListener');
+      addEventListenerSpy = vi.fn();
+      removeEventListenerSpy = vi.fn();
 
-      matchMediaSpy = spyOn(window, 'matchMedia').and.callFake((query: string) => {
+      matchMediaSpy = vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => {
         if (query === '(prefers-color-scheme: dark)') {
           return {
             matches: mockMediaQueryList.matches,
@@ -78,19 +76,19 @@ describe('GiscusThemeService', () => {
 
     it('should add event listener when syncing with OS', () => {
       service.syncWithOs();
-      expect(addEventListenerSpy).toHaveBeenCalledWith('change', jasmine.any(Function));
+      expect(addEventListenerSpy).toHaveBeenCalledWith('change', expect.any(Function));
     });
 
     it('should remove event listener when stopping sync', () => {
       service.syncWithOs();
       service.stopSyncWithOs();
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('change', jasmine.any(Function));
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('change', expect.any(Function));
     });
 
     it('should not add duplicate listeners on multiple sync calls', () => {
       service.syncWithOs();
       service.syncWithOs();
-      expect(addEventListenerSpy.calls.count()).toBe(2);
+      expect(addEventListenerSpy).toHaveBeenCalledTimes(2);
       expect(removeEventListenerSpy).toHaveBeenCalledTimes(1);
     });
   });
