@@ -1,0 +1,19 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 5%
+    patch:
+      default:
+        target: 80%
+
+comment:
+  layout: diff, flags, files
+  behavior: default
+  require_changes: true
+
+ignore:
+  - projects/demo/**
+  - **/*.spec.ts
+  - projects/ngx-giscus/src/public-api.ts

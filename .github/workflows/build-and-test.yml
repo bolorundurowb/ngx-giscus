@@ -1,0 +1,42 @@
+name: Build, Test & Coverage
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20.x']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test with coverage
+        run: npx ng test ngx-giscus --no-watch --browsers=ChromeHeadless --code-coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/ngx-giscus/lcov.info
+          fail_ci_if_error: false
+
+      - name: Build library
+        run: npx ng build ngx-giscus
+
+      - name: Build demo
+        run: npx ng build demo
