@@ -1,0 +1,44 @@
+<div class="demo-container">
+  <h1>ngx-giscus Demo</h1>
+  <p>
+    This is a demonstration of <code>ngx-giscus</code>, a native Angular library
+    for Giscus comment widgets.
+  </p>
+
+  <div class="controls">
+    <label>
+      <input type="checkbox" [ngModel]="useOsSync" (change)="toggleOsSync()" />
+      Sync with OS preference
+    </label>
+
+    <label>
+      Theme:
+      <select [ngModel]="theme" (ngModelChange)="onThemeChange()" [disabled]="useOsSync">
+        <option *ngFor="let t of availableThemes" [value]="t.value">
+          {{ t.label }}
+        </option>
+      </select>
+    </label>
+
+    <span class="current-theme">
+      Current theme: <strong>{{ theme }}</strong>
+    </span>
+  </div>
+
+  <div class="giscus-wrapper">
+    <ngx-giscus
+      repo="bolorundurowb/ngx-giscus"
+      repoId="your-repo-id"
+      category="Announcements"
+      categoryId="your-category-id"
+      mapping="pathname"
+      [strict]="false"
+      [reactionsEnabled]="true"
+      [emitMetadata]="false"
+      inputPosition="top"
+      [theme]="theme"
+      lang="en"
+      loading="lazy"
+    ></ngx-giscus>
+  </div>
+</div>
