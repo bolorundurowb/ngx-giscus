@@ -33,7 +33,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/ngx-giscus/lcov.info
-          fail_ci_if_error: false
+          fail_ci_if_error: true
 
       - name: Build library
         run: npx ng build ngx-giscus
