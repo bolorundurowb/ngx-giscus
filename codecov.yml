@@ -14,6 +14,6 @@ comment:
   require_changes: true
 
 ignore:
-  - projects/demo/**
-  - **/*.spec.ts
-  - projects/ngx-giscus/src/public-api.ts
+  - "projects/demo/**"
+  - "**/*.spec.ts"
+  - "projects/ngx-giscus/src/public-api.ts"
