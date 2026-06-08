@@ -13,7 +13,7 @@
       "prefix": "ngx-giscus",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "builder": "@angular/build:ng-packagr",
           "options": {
             "project": "projects/ngx-giscus/ng-package.json"
           },
@@ -27,6 +27,20 @@
           },
           "defaultConfiguration": "production"
         },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "buildTarget": "ngx-giscus:build",
+            "tsConfig": "projects/ngx-giscus/tsconfig.spec.json",
+            "runner": "vitest",
+            "setupFiles": ["projects/ngx-giscus/src/test-setup.ts"],
+            "coverageReporters": ["html", "lcov", "text-summary"],
+            "coverageExclude": [
+              "**/*.spec.ts",
+              "src/public-api.ts"
+            ]
+          }
+        }
       }
     },
     "demo": {
