@@ -41,12 +41,12 @@ You only need to set these once. Giscus will create a discussion per page (based
 npm install ngx-giscus
 ```
 
-**Peer dependencies:** This library requires `@angular/core` and `@angular/common` version 18.x or 19.x.
+**Peer dependencies:** This library requires `@angular/core` and `@angular/common` version 18.x through 22.x.
 
 ```json
 {
-  "@angular/core": ">=18.0.0 <20.0.0",
-  "@angular/common": ">=18.0.0 <20.0.0"
+  "@angular/core": ">=18.0.0 <23.0.0",
+  "@angular/common": ">=18.0.0 <23.0.0"
 }
 ```
 
